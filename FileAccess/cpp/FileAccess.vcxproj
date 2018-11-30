@@ -1,15 +1,16 @@
-<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{ce7d1e10-8014-4e42-b82b-806ee77b6d0c}</ProjectGuid>
-    <RootNamespace>App1</RootNamespace>
+    <ProjectGuid>{4CF105F3-58B8-596A-B05D-49E4309C8853}</ProjectGuid>
+    <RootNamespace>SDKTemplate</RootNamespace>
     <DefaultLanguage>en-US</DefaultLanguage>
     <MinimumVisualStudioVersion>14.0</MinimumVisualStudioVersion>
     <AppContainerApplication>true</AppContainerApplication>
     <ApplicationType>Windows Store</ApplicationType>
-    <WindowsTargetPlatformVersion Condition=" '$(WindowsTargetPlatformVersion)' == '' ">10.0.15063.0</WindowsTargetPlatformVersion>
-    <WindowsTargetPlatformMinVersion>10.0.10586.0</WindowsTargetPlatformMinVersion>
     <ApplicationTypeRevision>10.0</ApplicationTypeRevision>
+    <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformMinVersion>10.0.15063.0</WindowsTargetPlatformMinVersion>
+    <EnableDotNetNativeCompatibleProfile>true</EnableDotNetNativeCompatibleProfile>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <ItemGroup Label="ProjectConfigurations">
@@ -97,17 +98,13 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup>
-    <PackageCertificateKeyFile>App1_TemporaryKey.pfx</PackageCertificateKeyFile>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">
-    <GenerateManifest>false</GenerateManifest>
+    <IncludePath>$(VC_IncludePath);$(UniversalCRT_IncludePath);$(WindowsSDK_IncludePath);..\..\..\SharedContent\cpp</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">
     <ClCompile>
       <AdditionalOptions>/bigobj %(AdditionalOptions)</AdditionalOptions>
       <DisableSpecificWarnings>4453;28204</DisableSpecificWarnings>
     </ClCompile>
-    <Link />
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">
     <ClCompile>
@@ -141,42 +138,80 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
-    <ClInclude Include="App.xaml.h">
-      <DependentUpon>App.xaml</DependentUpon>
+    <ClInclude Include="..\..\..\SharedContent\cpp\App.xaml.h">
+      <DependentUpon>..\..\..\SharedContent\xaml\App.xaml</DependentUpon>
     </ClInclude>
-    <ClInclude Include="MainPage.xaml.h">
-      <DependentUpon>MainPage.xaml</DependentUpon>
+    <ClInclude Include="..\..\..\SharedContent\cpp\MainPage.xaml.h">
+      <DependentUpon>..\..\..\SharedContent\cpp\MainPage.xaml</DependentUpon>
+    </ClInclude>
+    <ClInclude Include="SampleConfiguration.h" />
+    <ClInclude Include="Scenario1_CreateAFileInThePicturesLibrary.xaml.h">
+      <DependentUpon>..\shared\Scenario1_CreateAFileInThePicturesLibrary.xaml</DependentUpon>
+    </ClInclude>
+    <ClInclude Include="Scenario2_GetTheParentFolderOfAFile.xaml.h">
+      <DependentUpon>..\shared\Scenario2_GetTheParentFolderOfAFile.xaml</DependentUpon>
+    </ClInclude>
+    <ClInclude Include="Scenario3_WriteAndReadTextInAFile.xaml.h">
+      <DependentUpon>..\shared\Scenario3_WriteAndReadTextInAFile.xaml</DependentUpon>
+    </ClInclude>
+    <ClInclude Include="Scenario4_WriteAndReadBytesInAFile.xaml.h">
+      <DependentUpon>..\shared\Scenario4_WriteAndReadBytesInAFile.xaml</DependentUpon>
+    </ClInclude>
+    <ClInclude Include="Scenario5_WriteAndReadAFileUsingAStream.xaml.h">
+      <DependentUpon>..\shared\Scenario5_WriteAndReadAFileUsingAStream.xaml</DependentUpon>
+    </ClInclude>
+    <ClInclude Include="Scenario6_DisplayFileProperties.xaml.h">
+      <DependentUpon>..\shared\Scenario6_DisplayFileProperties.xaml</DependentUpon>
+    </ClInclude>
+    <ClInclude Include="Scenario7_TrackAFileOrFolderSoThatYouCanAccessItLater.xaml.h">
+      <DependentUpon>..\shared\Scenario7_TrackAFileOrFolderSoThatYouCanAccessItLater.xaml</DependentUpon>
+    </ClInclude>
+    <ClInclude Include="Scenario8_CopyAFile.xaml.h">
+      <DependentUpon>..\shared\Scenario8_CopyAFile.xaml</DependentUpon>
+    </ClInclude>
+    <ClInclude Include="Scenario9_CompareTwoFilesToSeeIfTheyAreTheSame.xaml.h">
+      <DependentUpon>..\shared\Scenario9_CompareTwoFilesToSeeIfTheyAreTheSame.xaml</DependentUpon>
+    </ClInclude>
+    <ClInclude Include="Scenario10_DeleteAFile.xaml.h">
+      <DependentUpon>..\shared\Scenario10_DeleteAFile.xaml</DependentUpon>
+    </ClInclude>
+    <ClInclude Include="Scenario11_TryToGetAFileWithoutGettingAnError.xaml.h">
+      <DependentUpon>..\shared\Scenario11_TryToGetAFileWithoutGettingAnError.xaml</DependentUpon>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ApplicationDefinition Include="App.xaml">
+    <ApplicationDefinition Include="..\..\..\SharedContent\xaml\App.xaml">
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Page Include="MainPage.xaml">
+    <Page Include="..\..\..\SharedContent\cpp\MainPage.xaml">
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="..\shared\Scenario1_CreateAFileInThePicturesLibrary.xaml" />
+    <Page Include="..\shared\Scenario2_GetTheParentFolderOfAFile.xaml" />
+    <Page Include="..\shared\Scenario3_WriteAndReadTextInAFile.xaml" />
+    <Page Include="..\shared\Scenario4_WriteAndReadBytesInAFile.xaml" />
+    <Page Include="..\shared\Scenario5_WriteAndReadAFileUsingAStream.xaml" />
+    <Page Include="..\shared\Scenario6_DisplayFileProperties.xaml" />
+    <Page Include="..\shared\Scenario7_TrackAFileOrFolderSoThatYouCanAccessItLater.xaml" />
+    <Page Include="..\shared\Scenario8_CopyAFile.xaml" />
+    <Page Include="..\shared\Scenario9_CompareTwoFilesToSeeIfTheyAreTheSame.xaml" />
+    <Page Include="..\shared\Scenario10_DeleteAFile.xaml" />
+    <Page Include="..\shared\Scenario11_TryToGetAFileWithoutGettingAnError.xaml" />
+    <Page Include="..\..\..\SharedContent\xaml\Styles.xaml">
+      <Link>Styles\Styles.xaml</Link>
     </Page>
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest">
       <SubType>Designer</SubType>
     </AppxManifest>
-    <None Include="App1_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
-    <Image Include="Assets\LockScreenLogo.scale-200.png" />
-    <Image Include="Assets\SplashScreen.scale-200.png" />
-    <Image Include="Assets\Square150x150Logo.scale-200.png" />
-    <Image Include="Assets\Square44x44Logo.scale-200.png" />
-    <Image Include="Assets\Square44x44Logo.targetsize-24_altform-unplated.png" />
-    <Image Include="Assets\StoreLogo.png" />
-    <Image Include="Assets\Wide310x150Logo.scale-200.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="App.xaml.cpp">
-      <DependentUpon>App.xaml</DependentUpon>
+    <ClCompile Include="..\..\..\SharedContent\cpp\App.xaml.cpp">
+      <DependentUpon>..\..\..\SharedContent\xaml\App.xaml</DependentUpon>
     </ClCompile>
-    <ClCompile Include="MainPage.xaml.cpp">
-      <DependentUpon>MainPage.xaml</DependentUpon>
+    <ClCompile Include="..\..\..\SharedContent\cpp\MainPage.xaml.cpp">
+      <DependentUpon>..\..\..\SharedContent\cpp\MainPage.xaml</DependentUpon>
     </ClCompile>
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -186,6 +221,63 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="SampleConfiguration.cpp" />
+    <ClCompile Include="Scenario1_CreateAFileInThePicturesLibrary.xaml.cpp">
+      <DependentUpon>..\shared\Scenario1_CreateAFileInThePicturesLibrary.xaml</DependentUpon>
+    </ClCompile>
+    <ClCompile Include="Scenario2_GetTheParentFolderOfAFile.xaml.cpp">
+      <DependentUpon>..\shared\Scenario2_GetTheParentFolderOfAFile.xaml</DependentUpon>
+    </ClCompile>
+    <ClCompile Include="Scenario3_WriteAndReadTextInAFile.xaml.cpp">
+      <DependentUpon>..\shared\Scenario3_WriteAndReadTextInAFile.xaml</DependentUpon>
+    </ClCompile>
+    <ClCompile Include="Scenario4_WriteAndReadBytesInAFile.xaml.cpp">
+      <DependentUpon>..\shared\Scenario4_WriteAndReadBytesInAFile.xaml</DependentUpon>
+    </ClCompile>
+    <ClCompile Include="Scenario5_WriteAndReadAFileUsingAStream.xaml.cpp">
+      <DependentUpon>..\shared\Scenario5_WriteAndReadAFileUsingAStream.xaml</DependentUpon>
+    </ClCompile>
+    <ClCompile Include="Scenario6_DisplayFileProperties.xaml.cpp">
+      <DependentUpon>..\shared\Scenario6_DisplayFileProperties.xaml</DependentUpon>
+    </ClCompile>
+    <ClCompile Include="Scenario7_TrackAFileOrFolderSoThatYouCanAccessItLater.xaml.cpp">
+      <DependentUpon>..\shared\Scenario7_TrackAFileOrFolderSoThatYouCanAccessItLater.xaml</DependentUpon>
+    </ClCompile>
+    <ClCompile Include="Scenario8_CopyAFile.xaml.cpp">
+      <DependentUpon>..\shared\Scenario8_CopyAFile.xaml</DependentUpon>
+    </ClCompile>
+    <ClCompile Include="Scenario9_CompareTwoFilesToSeeIfTheyAreTheSame.xaml.cpp">
+      <DependentUpon>..\shared\Scenario9_CompareTwoFilesToSeeIfTheyAreTheSame.xaml</DependentUpon>
+    </ClCompile>
+    <ClCompile Include="Scenario10_DeleteAFile.xaml.cpp">
+      <DependentUpon>..\shared\Scenario10_DeleteAFile.xaml</DependentUpon>
+    </ClCompile>
+    <ClCompile Include="Scenario11_TryToGetAFileWithoutGettingAnError.xaml.cpp">
+      <DependentUpon>..\shared\Scenario11_TryToGetAFileWithoutGettingAnError.xaml</DependentUpon>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="..\..\..\SharedContent\media\microsoft-sdk.png">
+      <Link>Assets\microsoft-sdk.png</Link>
+    </Image>
+    <Image Include="..\..\..\SharedContent\media\smalltile-sdk.png">
+      <Link>Assets\smalltile-sdk.png</Link>
+    </Image>
+    <Image Include="..\..\..\SharedContent\media\splash-sdk.png">
+      <Link>Assets\splash-sdk.png</Link>
+    </Image>
+    <Image Include="..\..\..\SharedContent\media\squaretile-sdk.png">
+      <Link>Assets\squaretile-sdk.png</Link>
+    </Image>
+    <Image Include="..\..\..\SharedContent\media\storelogo-sdk.png">
+      <Link>Assets\storelogo-sdk.png</Link>
+    </Image>
+    <Image Include="..\..\..\SharedContent\media\tile-sdk.png">
+      <Link>Assets\tile-sdk.png</Link>
+    </Image>
+    <Image Include="..\..\..\SharedContent\media\windows-sdk.png">
+      <Link>Assets\windows-sdk.png</Link>
+    </Image>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

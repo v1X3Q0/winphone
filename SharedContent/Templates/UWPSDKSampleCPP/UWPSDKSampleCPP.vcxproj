@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{ce7d1e10-8014-4e42-b82b-806ee77b6d0c}</ProjectGuid>
-    <RootNamespace>App1</RootNamespace>
+    <ProjectGuid>{f710b9fd-4e6b-42d7-a99a-6d48888d48b0}</ProjectGuid>
+    <RootNamespace>SDKTemplate</RootNamespace>
     <DefaultLanguage>en-US</DefaultLanguage>
-    <MinimumVisualStudioVersion>14.0</MinimumVisualStudioVersion>
+    <MinimumVisualStudioVersion>15.0</MinimumVisualStudioVersion>
     <AppContainerApplication>true</AppContainerApplication>
     <ApplicationType>Windows Store</ApplicationType>
-    <WindowsTargetPlatformVersion Condition=" '$(WindowsTargetPlatformVersion)' == '' ">10.0.15063.0</WindowsTargetPlatformVersion>
-    <WindowsTargetPlatformMinVersion>10.0.10586.0</WindowsTargetPlatformMinVersion>
     <ApplicationTypeRevision>10.0</ApplicationTypeRevision>
+    <WindowsTargetPlatformVersion>10.0.17134.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformMinVersion>10.0.17134.0</WindowsTargetPlatformMinVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <ItemGroup Label="ProjectConfigurations">
@@ -58,21 +58,18 @@
     <UseDebugLibraries>false</UseDebugLibraries>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <PlatformToolset>v141</PlatformToolset>
-    <UseDotNetNativeToolchain>true</UseDotNetNativeToolchain>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <PlatformToolset>v141</PlatformToolset>
-    <UseDotNetNativeToolchain>true</UseDotNetNativeToolchain>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <PlatformToolset>v141</PlatformToolset>
-    <UseDotNetNativeToolchain>true</UseDotNetNativeToolchain>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -97,17 +94,13 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup>
-    <PackageCertificateKeyFile>App1_TemporaryKey.pfx</PackageCertificateKeyFile>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">
-    <GenerateManifest>false</GenerateManifest>
+    <IncludePath>$(VC_IncludePath);$(UniversalCRT_IncludePath);$(WindowsSDK_IncludePath);..\..\..\SharedContent\cpp</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">
     <ClCompile>
       <AdditionalOptions>/bigobj %(AdditionalOptions)</AdditionalOptions>
       <DisableSpecificWarnings>4453;28204</DisableSpecificWarnings>
     </ClCompile>
-    <Link />
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">
     <ClCompile>
@@ -141,42 +134,48 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
-    <ClInclude Include="App.xaml.h">
-      <DependentUpon>App.xaml</DependentUpon>
+    <ClInclude Include="..\..\..\SharedContent\cpp\App.xaml.h">
+      <DependentUpon>..\..\..\SharedContent\xaml\App.xaml</DependentUpon>
     </ClInclude>
-    <ClInclude Include="MainPage.xaml.h">
-      <DependentUpon>MainPage.xaml</DependentUpon>
+    <ClInclude Include="..\..\..\SharedContent\cpp\MainPage.xaml.h">
+      <DependentUpon>..\..\..\SharedContent\cpp\MainPage.xaml</DependentUpon>
+    </ClInclude>
+    <ClInclude Include="SampleConfiguration.h" />
+    <ClInclude Include="Scenario1_ShortName.xaml.h">
+      <DependentUpon>Scenario1_ShortName.xaml</DependentUpon>
+    </ClInclude>
+    <ClInclude Include="Scenario2_ShortName.xaml.h">
+      <DependentUpon>Scenario2_ShortName.xaml</DependentUpon>
+    </ClInclude>
+    <ClInclude Include="Scenario3_ShortName.xaml.h">
+      <DependentUpon>Scenario3_ShortName.xaml</DependentUpon>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ApplicationDefinition Include="App.xaml">
+    <ApplicationDefinition Include="..\..\..\SharedContent\xaml\App.xaml">
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Page Include="MainPage.xaml">
+    <Page Include="..\..\..\SharedContent\cpp\MainPage.xaml">
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Scenario1_ShortName.xaml" />
+    <Page Include="Scenario2_ShortName.xaml" />
+    <Page Include="Scenario3_ShortName.xaml" />
+    <Page Include="..\..\..\SharedContent\xaml\Styles.xaml">
+      <Link>Styles\Styles.xaml</Link>
     </Page>
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest">
       <SubType>Designer</SubType>
     </AppxManifest>
-    <None Include="App1_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
-    <Image Include="Assets\LockScreenLogo.scale-200.png" />
-    <Image Include="Assets\SplashScreen.scale-200.png" />
-    <Image Include="Assets\Square150x150Logo.scale-200.png" />
-    <Image Include="Assets\Square44x44Logo.scale-200.png" />
-    <Image Include="Assets\Square44x44Logo.targetsize-24_altform-unplated.png" />
-    <Image Include="Assets\StoreLogo.png" />
-    <Image Include="Assets\Wide310x150Logo.scale-200.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="App.xaml.cpp">
-      <DependentUpon>App.xaml</DependentUpon>
+    <ClCompile Include="..\..\..\SharedContent\cpp\App.xaml.cpp">
+      <DependentUpon>..\..\..\SharedContent\xaml\App.xaml</DependentUpon>
     </ClCompile>
-    <ClCompile Include="MainPage.xaml.cpp">
-      <DependentUpon>MainPage.xaml</DependentUpon>
+    <ClCompile Include="..\..\..\SharedContent\cpp\MainPage.xaml.cpp">
+      <DependentUpon>..\..\..\SharedContent\cpp\MainPage.xaml</DependentUpon>
     </ClCompile>
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -186,6 +185,39 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="SampleConfiguration.cpp" />
+    <ClCompile Include="Scenario1_ShortName.xaml.cpp">
+      <DependentUpon>Scenario1_ShortName.xaml</DependentUpon>
+    </ClCompile>
+    <ClCompile Include="Scenario2_ShortName.xaml.cpp">
+      <DependentUpon>Scenario2_ShortName.xaml</DependentUpon>
+    </ClCompile>
+    <ClCompile Include="Scenario3_ShortName.xaml.cpp">
+      <DependentUpon>Scenario3_ShortName.xaml</DependentUpon>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="..\..\..\SharedContent\media\microsoft-sdk.png">
+      <Link>Assets\microsoft-sdk.png</Link>
+    </Image>
+    <Image Include="..\..\..\SharedContent\media\smalltile-sdk.png">
+      <Link>Assets\smalltile-sdk.png</Link>
+    </Image>
+    <Image Include="..\..\..\SharedContent\media\splash-sdk.png">
+      <Link>Assets\splash-sdk.png</Link>
+    </Image>
+    <Image Include="..\..\..\SharedContent\media\squaretile-sdk.png">
+      <Link>Assets\squaretile-sdk.png</Link>
+    </Image>
+    <Image Include="..\..\..\SharedContent\media\storelogo-sdk.png">
+      <Link>Assets\storelogo-sdk.png</Link>
+    </Image>
+    <Image Include="..\..\..\SharedContent\media\tile-sdk.png">
+      <Link>Assets\tile-sdk.png</Link>
+    </Image>
+    <Image Include="..\..\..\SharedContent\media\windows-sdk.png">
+      <Link>Assets\windows-sdk.png</Link>
+    </Image>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -5,7 +5,12 @@
 
 #include "pch.h"
 #include "MainPage.xaml.h"
+
 #include <winternl.h>
+#include <iostream>
+#include <fstream>
+#include <string>
+#include <ppltasks.h>
 
 using namespace App1;
 
@@ -20,15 +25,28 @@ using namespace Windows::UI::Xaml::Input;
 using namespace Windows::UI::Xaml::Media;
 using namespace Windows::UI::Xaml::Navigation;
 
+using namespace Windows::Storage;
+using namespace Windows::Storage::Streams;
+using namespace Windows::System::Threading::Core;
+using namespace concurrency;
+
+
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
 
 DWORD kernbase;
-void init();
+int init();
+void create_file_sample(Platform::String^ tar_filename, unsigned char* out_buf, size_t out_size);
+int dump_kern32(DWORD kernbase);
+std::string GetLastErrorAsString();
 BOOL SetPrivilege(
 	HANDLE hToken,          // access token handle
 	LPCTSTR lpszPrivilege,  // name of privilege to enable/disable
 	BOOL bEnablePrivilege   // to enable or disable privilege
 );
+
+unsigned wp_version;
+enum { WP_15063_1390, WP_15063_1446 };
+
 
 typedef BOOL (*EnumProcessModules_t)(
 	HANDLE  hProcess,
@@ -85,7 +103,11 @@ LookupPrivilegeValueW_t LookupPrivilegeValueW_f;
 
 MainPage::MainPage()
 {
-	init();
+	int check_init = init();
+	if (check_init == -1)
+		return;
+	else if (check_init == TRUE)
+		goto safe_resume;
 	//GetProcessInformation(0, 0, 0  0);
 	//char lpbuf[200];
 	//RtlZeroMemory(lpbuf, 200);
@@ -167,13 +189,13 @@ MainPage::MainPage()
 //	error_new = GetLastError();
 //	return;
 //}
-
+safe_resume:
 	InitializeComponent();
 }
 
-void init()
+int init()
 {
-	unsigned GCP = (unsigned)GetCurrentProcess;											//GetCurrentProcess - 0xEECC1
+	unsigned GCP = (unsigned)GetCurrentProcess;											//GetCurrentProcess - 0xEECC1: 1390, 0x7ece1: 1446
 	char* check_addr = (char*)(GCP & 0xfffff000);
 	DWORD i;
 	for (i = (DWORD)check_addr; i > 0; i -= 0x1000)
@@ -183,13 +205,25 @@ void init()
 			break;
 	}
 	kernbase = i;
-	EnumProcessModules_f = (EnumProcessModules_t)(kernbase + 0xe4f61);
-	EnumDeviceDrivers_f = (EnumDeviceDrivers_t)(kernbase + 0x137dc1);
-	EnumProcesses_f = (EnumProcesses_t)(kernbase + 0x104741);
-	LoadLibraryW_f = (LoadLibraryW_t)(kernbase + 0xdc041);
-	GetModuleFileNameExW_f = (GetModuleFileNameExW_t)(kernbase + 0xfaaf1);
-	GetProcAddress_f = (GetProcAddress_t)(kernbase + 0xdbb21);
-	GetModuleHandleW_f = (GetModuleHandleW_t)(kernbase + 0xdafd1);
+	if ((GCP % 0x1000) == 0xcc1)
+		wp_version = WP_15063_1390;
+	else if ((GCP % 0x1000) == 0xce1)
+	{
+		return dump_kern32(kernbase);
+	}
+	else
+		return -1;
+		
+	if (wp_version == WP_15063_1390)
+	{
+		EnumProcessModules_f = (EnumProcessModules_t)(kernbase + 0xe4f61);
+		EnumDeviceDrivers_f = (EnumDeviceDrivers_t)(kernbase + 0x137dc1);
+		EnumProcesses_f = (EnumProcesses_t)(kernbase + 0x104741);
+		LoadLibraryW_f = (LoadLibraryW_t)(kernbase + 0xdc041);
+		GetModuleFileNameExW_f = (GetModuleFileNameExW_t)(kernbase + 0xfaaf1);
+		GetProcAddress_f = (GetProcAddress_t)(kernbase + 0xdbb21);
+		GetModuleHandleW_f = (GetModuleHandleW_t)(kernbase + 0xdafd1);
+	}
 }
 
 BOOL SetPrivilege(
@@ -239,4 +273,121 @@ BOOL SetPrivilege(
 	}
 
 	return TRUE;
+}
+
+IBuffer^ GetBufferFromString(String^ str)
+{
+	InMemoryRandomAccessStream^ memoryStream = ref new InMemoryRandomAccessStream();
+	DataWriter^ dataWriter = ref new DataWriter(memoryStream);
+	dataWriter->WriteString(str);
+	return dataWriter->DetachBuffer();
+}
+
+void create_file_sample(Platform::String^ tar_filename, unsigned char* out_buf, size_t out_size)
+{
+	//auto createFileTask = create_task(localFolder->CreateFileAsync(desiredName, Windows::Storage::CreationCollisionOption::FailIfExists));
+	//createFileTask.then([](StorageFile^ newFile)
+	//{
+	//	//Do something with the new file.
+	//});
+
+	//create_task(KnownFolders::GetFolderForUserAsync(nullptr /* current user */, KnownFolderId::PicturesLibrary))
+	//	.then([this](StorageFolder^ picturesFolder)
+	//{
+	//	return picturesFolder->CreateFileAsync(rootPage->Filename, CreationCollisionOption::ReplaceExisting);
+	//}).then([this](task<StorageFile^> task)
+	//{
+	//	//do something with file
+	//});
+	Platform::Array<unsigned char>^ data_t = ref new Platform::Array<unsigned char>(out_buf, out_size);
+
+	create_task(KnownFolders::GetFolderForUserAsync(nullptr /* current user */, KnownFolderId::PicturesLibrary))
+		.then([tar_filename](StorageFolder^ picturesFolder)
+	{
+		return picturesFolder->CreateFileAsync(tar_filename, CreationCollisionOption::ReplaceExisting);
+	}).then([out_buf, out_size, data_t](task<StorageFile^> task_file)
+	{
+		////do something with file
+		//create_task(FileIO::WriteBytesAsync(task_file.get(), data_t)).then([](task<void> task_write_check)
+		//{
+		//	try
+		//	{
+		//		task_write_check.get();
+		//	}
+		//	catch (COMException^ ex)
+		//	{
+		//		printf("%s", ex);
+		//	}
+		//});
+		printf("useless");
+	});
+
+}
+
+int dump_kern32(DWORD kernbase)
+{
+	BOOL bErrorFlag;
+	DWORD bWrit;
+	wp_version = WP_15063_1446;
+	char* kernbase_p = (char*)kernbase;
+	unsigned short num_sec = *(unsigned short*)&kernbase_p[0x106];
+	DWORD image_size = *(DWORD*)&kernbase_p[0x150];
+
+	void* kern32_filename = L"kern32.dll.raw";
+	DWORD fname_tar = wcslen((wchar_t*)kern32_filename);
+	LPCWSTR k32_path_const = L"C:\\Data\\Users\\Public\\Recent\\";
+	size_t target_path_len = wcslen(k32_path_const);
+
+	char* kern32_path[0x200];
+	RtlZeroMemory(kern32_path, 0x200);
+	RtlCopyMemory(kern32_path, k32_path_const, target_path_len * sizeof(wchar_t));
+	//char lpbuf[0x500];
+	//RtlZeroMemory(lpbuf, 0x500);
+	//GetCurrentDirectory(0x500, (LPWSTR)lpbuf);											//Works
+	//DWORD cwd_len = wcslen((LPWSTR)lpbuf);
+	//RtlCopyMemory(lpbuf + cwd_len * sizeof(wchar_t),
+	//	L"\\", 2);
+	//cwd_len++;
+	void* destination_memcpy = (void*)((DWORD)kern32_path + (DWORD)target_path_len * 2);
+	RtlCopyMemory(destination_memcpy, (void*)kern32_filename, fname_tar * 2);
+
+	//std::ofstream new_file_cpp("C:\\Data\\Users\\Public\\Documents\\kern32.dll.raw", std::ios::out |
+	//	std::ios::binary);
+	//new_file_cpp.write(kernbase_p, image_size);
+	//new_file_cpp.close();
+
+	//HANDLE new_file = CreateFile2((LPCWSTR)kern32_path,
+	//	GENERIC_WRITE, 0, OPEN_ALWAYS, 0);			//permission denied
+	//if (new_file == INVALID_HANDLE_VALUE)
+	//	GetLastErrorAsString();
+	//bErrorFlag = WriteFile(
+	//	new_file,           // open file handle
+	//	kernbase_p,      // start of data to write
+	//	image_size,  // number of bytes to write
+	//	&bWrit, // number of bytes that were written
+	//	NULL);            // no overlapped structure
+	//CloseHandle(new_file);
+
+	Platform::String^ target_file_uwp(L"kern32.dll.raw");
+	create_file_sample(target_file_uwp, (unsigned char*)kernbase_p, 0x200);
+	return TRUE;
+}
+
+std::string GetLastErrorAsString()
+{
+	//Get the error message, if any.
+	DWORD errorMessageID = ::GetLastError();
+	if (errorMessageID == 0)
+		return std::string(); //No error message has been recorded
+
+	LPSTR messageBuffer = nullptr;
+	size_t size = FormatMessageA(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,
+		NULL, errorMessageID, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), (LPSTR)&messageBuffer, 0, NULL);
+
+	std::string message(messageBuffer, size);
+
+	//Free the buffer.
+	LocalFree(messageBuffer);
+
+	return message;
 }
