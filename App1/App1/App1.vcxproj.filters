@@ -8,6 +8,12 @@
       <UniqueIdentifier>78d2b094-58de-4c8c-a154-194ece4e6e9a</UniqueIdentifier>
       <Extensions>bmp;fbx;gif;jpg;jpeg;tga;tiff;tif;png</Extensions>
     </Filter>
+    <Filter Include="source">
+      <UniqueIdentifier>{33e66e43-118e-41eb-b8c9-7ef0baa0b915}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include">
+      <UniqueIdentifier>{fcb0b9fc-7d61-452b-b1de-159e3829a7e5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml" />
@@ -16,11 +22,47 @@
     <ClCompile Include="App.xaml.cpp" />
     <ClCompile Include="MainPage.xaml.cpp" />
     <ClCompile Include="pch.cpp" />
+    <ClCompile Include="privelege_check.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="file_open.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="util.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="dxgkrnl.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="init.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="enum_directory.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
     <ClInclude Include="App.xaml.h" />
     <ClInclude Include="MainPage.xaml.h" />
+    <ClInclude Include="file_open.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="privelege_check.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="util.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="dxgkrnl.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="init_list.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="enum_directory.h">
+      <Filter>include</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Assets\LockScreenLogo.scale-200.png">

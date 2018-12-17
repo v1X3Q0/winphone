@@ -1,0 +1,17 @@
+﻿<Page
+    x:Class="dxxamlapp1.DirectXPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:dxxamlapp1"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <SwapChainPanel x:Name="swapChainPanel">
+        <TextBox x:Name="stdin_custom" HorizontalAlignment="Left"
+                 TextWrapping="NoWrap" Text="" VerticalAlignment="Top"
+                 FontSize="30" KeyDown="OnKeyDownHandler" FontFamily="Noto Mono"
+                 Height="47"/>
+    </SwapChainPanel>
+</Page>
