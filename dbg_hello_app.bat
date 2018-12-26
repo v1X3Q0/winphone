@@ -1,0 +1,1 @@
+windbg "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\devenv.exe" /run "C:\Users\mariomain\repos\winphone\hello_app\hello_app.sln"
