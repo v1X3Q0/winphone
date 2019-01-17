@@ -23,5 +23,9 @@ using namespace Windows::UI::Xaml::Navigation;
 
 MainPage::MainPage()
 {
+	int h = 0;
+	int j = 1;
+	int c = 4;
+	c = j / h;
 	InitializeComponent();
 }
