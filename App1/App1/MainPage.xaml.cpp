@@ -41,6 +41,7 @@ using namespace concurrency;
 
 void create_file_sample(Platform::String^ tar_filename, unsigned char* out_buf, size_t out_size);
 void enumMods(HANDLE new_id);
+void freeMods();
 void enumProcs(std::vector<int> *known_pids);
 void openWin32sys();
 std::string GetLastErrorAsString();
@@ -66,6 +67,10 @@ MainPage::MainPage()
 {
 	std::vector<int> valid_pids, known_pids;
 	int check_init = init_funcs(&kernbase);
+	enumMods((HANDLE)-1);
+	freeMods();
+	HANDLE newLIb = LoadLibraryW(L"Chakra.dll");
+	enumMods((HANDLE)-1);
 	if (check_init == -1)
 		return;
 	else if (check_init == TRUE)
@@ -237,6 +242,37 @@ void enumMods(HANDLE new_id)
 			printf("yes\n");
 		}
 	}
+}
+
+void freeMods()
+{
+	HMODULE hMods[1024];
+	DWORD cbNeeded;
+	DWORD i, pid = GetCurrentProcessId();
+	HANDLE opid;
+	BOOL freeFail = FALSE;
+	opid = OpenProcess(PROCESS_ALL_ACCESS, FALSE, pid);
+	if (!EnumProcessModules(opid, hMods, sizeof(hMods), &cbNeeded))
+		return;
+	//HANDLE Advapi32 = LoadLibraryW(L"Advapi32.dll");
+	for (i = 8; i < (cbNeeded / sizeof(HMODULE)); i++)
+	{
+		//TCHAR szModName[MAX_PATH];
+
+		//// Get the full path to the module's file.
+
+		//if (GetModuleFileNameExW(opid, hMods[i], szModName,
+		//	sizeof(szModName) / sizeof(TCHAR)))
+		//{
+		//	printf("yes\n");
+		//}
+		if (i == 26)
+			continue;
+		freeFail = FreeLibrary(hMods[i]);
+		if (freeFail == FALSE)
+			return;
+	}
+
 }
 
 void bruteforcePID(std::vector<int> *valid_pids)
