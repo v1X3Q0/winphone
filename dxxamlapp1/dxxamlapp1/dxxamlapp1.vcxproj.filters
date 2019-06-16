@@ -56,6 +56,9 @@
     <Image Include="Assets\Wide310x150Logo.scale-200.png">
       <Filter>Assets</Filter>
     </Image>
+    <Filter Include="Generated Files">
+      <UniqueIdentifier>{cf37af89-e751-4773-a4e9-e959f9024681}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml" />
@@ -81,6 +84,15 @@
     </ClInclude>
     <ClInclude Include="enum_directory.h" />
     <ClInclude Include="parseInput.h" />
+    <ClInclude Include="Generated Files\App.g.hpp">
+      <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Generated Files\DirectXPage.g.hpp">
+      <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Generated Files\XamlBindingInfo.g.hpp">
+      <Filter>Generated Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Assets\StoreLogo.png">

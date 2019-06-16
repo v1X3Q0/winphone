@@ -1,11 +1,12 @@
 ﻿#include "pch.h"
 #include "SampleFpsTextRenderer.h"
 #include <list>
-
+#include "util.h"
 #include "Common/DirectXHelper.h"
 
 using namespace dxxamlapp1;
 using namespace Microsoft::WRL;
+std::mutex m;
 
 // Initializes D2D resources used for text rendering.
 SampleFpsTextRenderer::SampleFpsTextRenderer(const
@@ -47,13 +48,32 @@ SampleFpsTextRenderer::SampleFpsTextRenderer(const
 }
 
 // Updates the text to be displayed.
-void SampleFpsTextRenderer::Update(std::list<wchar_t*> *stdout_cust)
+void SampleFpsTextRenderer::Update(std::list<wchar_t*> *stdout_cust, FILE* stdout_stream)
 {
 	// Update display text.
 	//uint32 fps = timer.GetFramesPerSecond();
-	static std::mutex m;
-	std::lock_guard<std::mutex> m2(m);
-	
+	static std::mutex m3;
+	//std::lock_guard<std::mutex> m2(m3);
+	while (m3.try_lock() == false);
+	char line[128];
+	int stdoutLoc = 0;// ftell(stdout_stream);
+	int cur = 0;
+	//fseek(stdout_stream, 0, SEEK_SET);
+	while (cur < stdoutLoc)
+	{
+		fgets(line, 128, stdout_stream);
+		cur += strlen(line);
+		std::wstring newLineT = utf16_encode(std::string(line));
+		int size_alloc = newLineT.size() + 1;
+		wchar_t* anew = new wchar_t[size_alloc]/*(wchar_t*)malloc(size_alloc * 2)*/;
+		RtlZeroMemory(anew, size_alloc * 2);
+		memcpy(anew, (void*)newLineT.data(), size_alloc * 2);
+		stdout_cust->push_front(anew);
+	}
+	//errno_t err = fopen_s(&stdout_stream, "C:\\Users\\mariomain\\Pictures\\stdout_stream.txt", "w");
+	//if (err == 0)
+	//	cur = 1;
+	//fseek(stdout_stream, 0, SEEK_SET);
 	//m_text = (fps > 0) ? std::to_wstring(fps) + L" FPS" : L" - FPS";
 	wchar_t cwd[0x100];
 	RtlZeroMemory(cwd, 0x100 * 2);
@@ -99,6 +119,7 @@ void SampleFpsTextRenderer::Update(std::list<wchar_t*> *stdout_cust)
 	DX::ThrowIfFailed(
 		m_textLayout->GetMetrics(&m_textMetrics)
 		);
+	m3.unlock();
 }
 
 // Renders a frame to the screen.

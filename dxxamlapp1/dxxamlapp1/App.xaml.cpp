@@ -6,6 +6,8 @@
 #include "pch.h"
 #include "DirectXPage.xaml.h"
 
+FILE* stdout_stream;
+
 using namespace dxxamlapp1;
 
 using namespace Platform;
@@ -28,6 +30,18 @@ using namespace Windows::UI::Xaml::Navigation;
 /// </summary>
 App::App()
 {
+#ifdef _X86_
+	wchar_t dir[0x100];
+	GetCurrentDirectory(0x100, dir);
+	errno_t err;
+	err = fopen_s(&stdout_stream, "C:\\Users\\mariomain\\repos\\winphone\\dxxamlapp1\\Debug\\dxxamlapp1\\AppX\\Assets\\stdout_stream.txt", "w");
+	err = freopen_s(&stdout_stream, "C:\\Users\\mariomain\\Downloads\\stdout_stream.txt",
+		"w", stdout);
+#endif
+#ifdef _ARM_
+	errno_t err = freopen_s(&stdout_stream, "stdout_stream.txt",
+		"w+", stdout);
+#endif
 	InitializeComponent();
 	Suspending += ref new SuspendingEventHandler(this, &App::OnSuspending);
 	Resuming += ref new EventHandler<Object^>(this, &App::OnResuming);

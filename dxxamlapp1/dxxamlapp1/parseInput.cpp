@@ -5,25 +5,20 @@
 #include <cctype>
 #include <algorithm>
 #include <vector>
+#include "util.h"
 #include "enum_directory.h"
 
-std::string utf8_encode(const std::wstring &wstr)
-{
-	if (wstr.empty())
-		return std::string();
-	int size_needed = WideCharToMultiByte(CP_UTF8, 0, &wstr[0], (int)wstr.size(), NULL, 0, NULL, NULL);
-	std::string strTo(size_needed, 0);
-	WideCharToMultiByte(CP_UTF8, 0, &wstr[0], (int)wstr.size(), &strTo[0], size_needed, NULL, NULL);
-	return strTo;
-}
+extern FILE* stdout_stream;
 
 std::string to_lower(std::string caseIns)
 {
-	char* data = (char*)malloc(caseIns.size());
+	char* data = (char*)malloc(caseIns.size() + 1);
+	memset(data, 0, caseIns.size() + 1);
 	memcpy(data, caseIns.data(), caseIns.size());
-	for (int i = 0; i = caseIns.size(); i++)
+	for (int i = 0; i < caseIns.size(); i++)
 		data[i] = (char)tolower(data[i]);
 	std::string new1(data);
+	free(data);
 	return new1;
 }
 
@@ -42,7 +37,7 @@ int parseInput(wchar_t* argv, std::string *cmd, std::vector<std::string> *args)
 	ansInpt.erase(new_end, ansInpt.end());
 
 	std::istringstream iss(ansInpt);
-	auto spacTot = std::count(ansInpt.begin(), ansInpt.end(), " ");
+	auto spacTot = std::count(ansInpt.begin(), ansInpt.end(), ' ');
 	
 	//if (spacTot == 0)
 	std::string buf;
@@ -54,6 +49,7 @@ int parseInput(wchar_t* argv, std::string *cmd, std::vector<std::string> *args)
 		iss >> buf;
 		args->push_back(buf);
 	}
+	return 0;
 }
 
 int isValidCommand(std::string cmd)
@@ -62,10 +58,10 @@ int isValidCommand(std::string cmd)
 		return true;
 	else if (cmd == "cd")
 		return true;
-	else
-	{
-		if (PathExi)
-	}
+	//else
+	//{
+	//	if (PathExi)
+	//}
 }
 
 void execCommand(std::string *cmd, std::vector<std::string> *argv)
@@ -75,7 +71,20 @@ void execCommand(std::string *cmd, std::vector<std::string> *argv)
 	{
 		wchar_t dir[0x100];
 		GetCurrentDirectory(0x100, dir);
-		enum_directory(dir);
+		char dirC[0x200];
+		memset(dirC, 0, 0x200);
+		std::wstring wstrTo(dir);
+		std::string strTo = utf8_encode(dir);
+		memcpy(dirC, strTo.data(), strTo.size());
+		enum_directory(dirC);
+	}
+	else if (buf == "echo")
+	{
+		fprintf(stdout, "successfully reassigned\n");
+		//printf("%s ", buf);
+		//for (int i = 0; i < argv->size(); i++)
+		//	printf("%s ", (*argv)[i]);
+		//printf("\n");
 	}
 	//else
 	//{

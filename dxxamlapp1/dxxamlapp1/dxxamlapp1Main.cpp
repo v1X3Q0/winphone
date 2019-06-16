@@ -4,6 +4,8 @@
 #include "Common\DirectXHelper.h"
 
 std::list<wchar_t*> stdout_cust;
+extern FILE* stdout_stream;
+extern std::mutex m;
 
 using namespace dxxamlapp1;
 using namespace Windows::Foundation;
@@ -73,7 +75,7 @@ void dxxamlapp1Main::Update()
 	m_timer.Tick([&]()
 	{
 		// TODO: Replace this with your app's content update functions.
-		m_fpsTextRenderer->Update(&stdout_cust);
+		m_fpsTextRenderer->Update(&stdout_cust, stdout_stream);
 	});
 }
 

@@ -10,8 +10,13 @@
 #include "parseInput.h"
 
 extern std::list<wchar_t*> stdout_cust;
+extern FILE* stdout_stream;
 
 using namespace dxxamlapp1;
+
+using namespace concurrency;
+using namespace Windows::Storage;
+using namespace Windows::UI::Xaml;
 
 using namespace Platform;
 using namespace Windows::Foundation;
@@ -28,10 +33,29 @@ using namespace Windows::UI::Xaml::Input;
 using namespace Windows::UI::Xaml::Media;
 using namespace Windows::UI::Xaml::Navigation;
 using namespace concurrency;
-
+int ijk;
 DirectXPage::DirectXPage():
 	m_windowVisible(true)
 {
+	//Platform::String^ newFile = ref new Platform::String(L"stdout_stream.txt");
+	//create_task(KnownFolders::GetFolderForUserAsync(nullptr /* current user */, KnownFolderId::PicturesLibrary))
+	//	.then([this, newFile](StorageFolder^ picturesFolder)
+	//{
+	//	return picturesFolder->CreateFileAsync(newFile, CreationCollisionOption::ReplaceExisting);
+	//}).then([this](task<StorageFile^> task)
+	//{
+	//	try
+	//	{
+	//		//StorageFile^ file = task.get();
+	//		ijk = 0;
+	//	}
+	//	catch (Exception^ e)
+	//	{
+	//		// I/O errors are reported as exceptions.
+	//		ijk = 1;
+	//	}
+	//});
+	
 	InitializeComponent();
 
 	// Register event handlers for page lifecycle.
@@ -162,7 +186,6 @@ void DirectXPage::OnKeyDownHandler(Platform::Object^ sender, Windows::UI::Xaml::
 			std::string cmd;
 			std::vector<std::string> args;
 			parseInput((wchar_t*)stdin_custom->Text->Data(), &cmd, &args);
-			isValidCommand(cmd);
 #endif
 			DWORD size_alloc = wcslen((wchar_t*)stdin_custom->Text->Data()) + 1;
 			wchar_t* anew = new wchar_t[size_alloc]/*(wchar_t*)malloc(size_alloc * 2)*/;
@@ -171,7 +194,8 @@ void DirectXPage::OnKeyDownHandler(Platform::Object^ sender, Windows::UI::Xaml::
 			stdout_cust.push_front(anew);
 			stdin_custom->Text = "";
 #ifndef testing
-			execCommand(&cmd, &args);
+			if (isValidCommand(cmd))
+				execCommand(&cmd, &args);
 #endif
 		}
 		// Do Something
