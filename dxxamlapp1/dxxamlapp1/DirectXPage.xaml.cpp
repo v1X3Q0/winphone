@@ -14,7 +14,6 @@ extern FILE* stdout_stream;
 
 using namespace dxxamlapp1;
 
-using namespace concurrency;
 using namespace Windows::Storage;
 using namespace Windows::UI::Xaml;
 
@@ -33,29 +32,10 @@ using namespace Windows::UI::Xaml::Input;
 using namespace Windows::UI::Xaml::Media;
 using namespace Windows::UI::Xaml::Navigation;
 using namespace concurrency;
-int ijk;
+
 DirectXPage::DirectXPage():
 	m_windowVisible(true)
-{
-	//Platform::String^ newFile = ref new Platform::String(L"stdout_stream.txt");
-	//create_task(KnownFolders::GetFolderForUserAsync(nullptr /* current user */, KnownFolderId::PicturesLibrary))
-	//	.then([this, newFile](StorageFolder^ picturesFolder)
-	//{
-	//	return picturesFolder->CreateFileAsync(newFile, CreationCollisionOption::ReplaceExisting);
-	//}).then([this](task<StorageFile^> task)
-	//{
-	//	try
-	//	{
-	//		//StorageFile^ file = task.get();
-	//		ijk = 0;
-	//	}
-	//	catch (Exception^ e)
-	//	{
-	//		// I/O errors are reported as exceptions.
-	//		ijk = 1;
-	//	}
-	//});
-	
+{	
 	InitializeComponent();
 
 	// Register event handlers for page lifecycle.
