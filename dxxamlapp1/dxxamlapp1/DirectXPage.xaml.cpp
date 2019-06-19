@@ -9,7 +9,7 @@
 #include "DirectXPage.xaml.h"
 #include "parseInput.h"
 
-extern std::list<wchar_t*> stdout_cust;
+extern std::list<char*> stdout_cust;
 extern FILE* stdout_stream;
 
 using namespace dxxamlapp1;
@@ -165,13 +165,17 @@ void DirectXPage::OnKeyDownHandler(Platform::Object^ sender, Windows::UI::Xaml::
 #ifndef testing
 			std::string cmd;
 			std::vector<std::string> args;
-			parseInput((wchar_t*)stdin_custom->Text->Data(), &cmd, &args);
+			char* cmdChar = parseInput((wchar_t*)stdin_custom->Text->Data(), &cmd, &args);
+			std::string wholeCmd(cmdChar);
+			//stdout_cust.push_front(wholeCmd);
+			printf("%s\n", cmdChar);
+			free(cmdChar);
 #endif
-			DWORD size_alloc = wcslen((wchar_t*)stdin_custom->Text->Data()) + 1;
-			wchar_t* anew = new wchar_t[size_alloc]/*(wchar_t*)malloc(size_alloc * 2)*/;
-			RtlZeroMemory(anew, size_alloc * 2);
-			memcpy(anew, (void*)stdin_custom->Text->Data(), size_alloc * 2);
-			stdout_cust.push_front(anew);
+			//DWORD size_alloc = wcslen((wchar_t*)stdin_custom->Text->Data()) + 1;
+			//wchar_t* anew = new wchar_t[size_alloc]/*(wchar_t*)malloc(size_alloc * 2)*/;
+			//RtlZeroMemory(anew, size_alloc * 2);
+			//memcpy(anew, (void*)stdin_custom->Text->Data(), size_alloc * 2);
+			//stdout_cust.push_front(anew);
 			stdin_custom->Text = "";
 #ifndef testing
 			if (isValidCommand(cmd))

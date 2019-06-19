@@ -3,7 +3,7 @@
 #include "dxxamlapp1Main.h"
 #include "Common\DirectXHelper.h"
 
-std::list<wchar_t*> stdout_cust;
+std::list<char*> stdout_cust;
 extern FILE* stdout_stream;
 extern std::mutex m;
 

@@ -2,6 +2,9 @@
 #include <string>
 #include <util.h>
 
+using namespace Platform;
+using namespace Windows::Storage;
+
 std::wstring StringToWString(const std::string& s)
 {
 	std::wstring temp(s.length(), L' ');
@@ -17,26 +20,56 @@ std::string WStringToString(const std::wstring& s)
 	return temp;
 }
 
-std::string utf8_encode(const std::wstring &wstr)
+char* utf8_encode(const wchar_t* wstr)
 {
-	if (wstr.empty())
-		return std::string();
-	int size_needed = WideCharToMultiByte(CP_UTF8, 0, &wstr[0], (int)wstr.size(), NULL, 0, NULL, NULL);
-	std::string strTo(size_needed, 0);
-	WideCharToMultiByte(CP_UTF8, 0, &wstr[0], (int)wstr.size(), &strTo[0], size_needed, NULL, NULL);
-	return strTo;
+	int size_needed = wcslen(wstr);
+	if (size_needed == 0)
+		return NULL;
+	char* newStr = (char*)calloc(size_needed + 1, 1);
+	int result = WideCharToMultiByte(CP_UTF8, 0, wstr, size_needed, newStr, size_needed, NULL, NULL);
+	if (result == 0)
+	{
+		result = GetLastError();
+		free(newStr);
+		return NULL;
+	}
+	return newStr;
 }
 
-std::wstring utf16_encode(const std::string &str)
+wchar_t* utf16_encode(const char* str)
 {
-	if (str.empty())
-		return std::wstring();
-	size_t len = str.size();
-	WCHAR* unistring = (WCHAR*)malloc(len + 1);
-	int result = MultiByteToWideChar(CP_OEMCP, 0, str.data(), -1, unistring, len + 1);
-	std::wstring strTo;
-	if (result != 0)
-		strTo = std::wstring(unistring);
-	delete[] unistring;
-	return strTo;
+	int size_needed = strlen(str);
+	if (size_needed == 0)
+		return NULL;
+	wchar_t* unistring = (wchar_t*)malloc((size_needed + 1) * 2);
+	int result = MultiByteToWideChar(CP_OEMCP, 0, str, -1, unistring, (size_needed + 1) * 2);
+	if (result == 0)
+	{
+		free(unistring);
+		return NULL;
+	}
+	return unistring;
+}
+
+void resetStream(FILE** stdout_stream)
+{
+	String^ localfolder = ApplicationData::Current->LocalFolder->Path;
+	std::wstring basePath(localfolder->Data());
+	std::wstring fileName(L"\\stdout_stream.txt");
+	basePath = basePath + fileName;
+	const wchar_t* fullpath = basePath.c_str();
+	size_t size = wcslen(fullpath) * 2 + 2;
+	char * StartPoint = new char[size];
+	size_t c_size;
+	wcstombs_s(&c_size, StartPoint, size, fullpath, size);
+	errno_t err;
+
+	err = freopen_s(stdout_stream, StartPoint,
+		"w+", stdout);
+	delete[] StartPoint;
+
+	//if (err == 0)
+	//	ijk = 0;
+	//else
+	//	ijk = 1;
 }

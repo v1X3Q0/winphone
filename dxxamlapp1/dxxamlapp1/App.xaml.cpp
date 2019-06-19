@@ -5,7 +5,7 @@
 
 #include "pch.h"
 #include "DirectXPage.xaml.h"
-
+#include "util.h"
 FILE* stdout_stream = NULL;
 
 using namespace dxxamlapp1;
@@ -30,45 +30,8 @@ using namespace Windows::UI::Xaml::Navigation;
 /// </summary>
 App::App()
 {
-	int ijk = 2;
-	String^ localfolder = ApplicationData::Current->LocalFolder->Path;
-	std::wstring basePath(localfolder->Data());
-	std::wstring fileName(L"\\stdout_stream.txt");
-	basePath = basePath + fileName;
-	const wchar_t* fullpath = basePath.c_str();
-	size_t size = wcslen(fullpath) * 2 + 2;
-	char * StartPoint = new char[size];
-	size_t c_size;
-	wcstombs_s(&c_size, StartPoint, size, fullpath, size);
+	resetStream(&stdout_stream);
 
-	//FILE *fp_testFile = NULL;
-	errno_t err;
-
-	//err = fopen_s(&fp_testFile, StartPoint, "wb");
-	err = freopen_s(&stdout_stream, StartPoint,
-		"w", stdout);
-
-	if (err == 0)
-	{
-		ijk = 0;
-	}
-	else
-	{
-		ijk = 1;
-	}
-
-#ifdef _X86_
-	wchar_t dir[0x100];
-	GetCurrentDirectory(0x100, dir);
-	errno_t err;
-	err = fopen_s(&stdout_stream, "C:\\Users\\mariomain\\repos\\winphone\\dxxamlapp1\\Debug\\dxxamlapp1\\AppX\\Assets\\stdout_stream.txt", "w");
-	err = freopen_s(&stdout_stream, "C:\\Users\\mariomain\\Downloads\\stdout_stream.txt",
-		"w", stdout);
-#endif
-#ifdef _ARM_
-	errno_t err = freopen_s(&stdout_stream, "stdout_stream.txt",
-		"w+", stdout);
-#endif
 	InitializeComponent();
 	Suspending += ref new SuspendingEventHandler(this, &App::OnSuspending);
 	Resuming += ref new EventHandler<Object^>(this, &App::OnResuming);

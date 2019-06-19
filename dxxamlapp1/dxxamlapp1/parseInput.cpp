@@ -27,10 +27,11 @@ bool BothAreSpaces(char lhs, char rhs)
 	return (lhs == rhs) && (lhs == ' ');
 }
 
-int parseInput(wchar_t* argv, std::string *cmd, std::vector<std::string> *args)
+char* parseInput(wchar_t* argv, std::string *cmd, std::vector<std::string> *args)
 {
-	std::wstring inputStr = std::wstring(argv);
-	std::string ansInpt = utf8_encode(inputStr);
+	//std::wstring inputStr = std::wstring(argv);
+	char* ansChar = utf8_encode(argv);
+	std::string ansInpt(ansChar);
 	ansInpt = to_lower(ansInpt);
 
 	auto new_end = std::unique(ansInpt.begin(), ansInpt.end(), BothAreSpaces);
@@ -49,7 +50,7 @@ int parseInput(wchar_t* argv, std::string *cmd, std::vector<std::string> *args)
 		iss >> buf;
 		args->push_back(buf);
 	}
-	return 0;
+	return ansChar;
 }
 
 int isValidCommand(std::string cmd)
@@ -58,6 +59,7 @@ int isValidCommand(std::string cmd)
 		return true;
 	else if (cmd == "cd")
 		return true;
+	return false;
 	//else
 	//{
 	//	if (PathExi)

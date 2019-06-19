@@ -15,7 +15,7 @@ namespace dxxamlapp1
 			deviceResources, double);
 		void CreateDeviceDependentResources();
 		void ReleaseDeviceDependentResources();
-		void Update(std::list<wchar_t*>*, FILE*);
+		void Update(std::list<char*>*, FILE*);
 		void Render();
 
 	private:

@@ -55,7 +55,7 @@ int enum_directory(CHAR *argv)
 	} while (FindNextFileA(hFind, &ffd) != 0);
 
 	dwError = GetLastError();
-	if (dwError != ERROR_NO_MORE_FILES)
+	if (dwError == ERROR_NO_MORE_FILES)
 	{
 		printf("lastfile");
 	}
